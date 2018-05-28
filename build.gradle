@@ -1,0 +1,30 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+
+group = 'com.frosqh.botpaikea'
+version = '0.1'
+
+task fatJarServer(type: Jar){
+    manifest {
+        attributes 'Implementation-Title': 'BotPaikeaServer',
+                'Implementation-Version': 0.1,
+                'Main-Class': 'com.frosqh.botpaikea.server.BotPaikea'
+    }
+    baseName = project.name+'-all'
+    from {configurations.compile.collet {it.isDirectory() ? it:zipTree(it)}}
+    with jar
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.logging:log4j-api:2.10.0'
+    compile 'org.apache.logging:log4j-core:2.10.0'
+    compile 'com.jfoenix:jfoenix:1.7.0'
+    compile 'org.xerial:sqlite-jdbc:3.7.2'
+    compile 'org.controlsfx:controlsfx:8.0.5'
+    compile 'junit:junit:4.12'
+}
