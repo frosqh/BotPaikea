@@ -1,9 +1,8 @@
-package com.frosqh.botpaikea.server.core;
+package com.frosqh.botpaikea.server.core.DataBase;
 
-import javafx.scene.control.Alert;
 import com.frosqh.botpaikea.server.models.User;
+import javafx.scene.control.Alert;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +25,9 @@ public class UserDAO extends DAO<User>{
             Statement stm = this.connect.createStatement();
             String select = "SELECT * FROM user WHERE id = "+id;
             ResultSet result = stm.executeQuery(select);
-            return new User(id,result.getString("username"),result.getString("password"),result.getString("mail"),result.getString("ytprofile"),result.getString("spprofile"),result.getString("deprofile"));
+            User user = new User(id,result.getString("username"),result.getString("password"),result.getString("mail"),result.getString("ytprofile"),result.getString("spprofile"),result.getString("deprofile"));
+            stm.close();
+            return user;
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("DataBase Error");
@@ -42,7 +43,7 @@ public class UserDAO extends DAO<User>{
     public User create(User obj) {
         try {
             Statement stm = this.connect.createStatement();
-            String select = "SELECT MAX(id) AS max_id FROM user"; //Getting curren max id for auto_increment
+            String select = "SELECT MAX(id) AS max_id FROM user"; //Getting current max id for auto_increment
             ResultSet result = stm.executeQuery(select);
             int id = 1;
             if (result.next()){
@@ -64,6 +65,7 @@ public class UserDAO extends DAO<User>{
                 prepare.setString(7,obj.getDeprofile());
             }
             prepare.executeUpdate();
+            prepare.close();
             return find(id);
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -80,9 +82,10 @@ public class UserDAO extends DAO<User>{
     public User update(User obj) {
         try {
             Statement stm = this.connect.createStatement();
-            String upd = "UPDATE uset SET username = '"+obj.getUsername()+"', password = '"+obj.getPassword()+"', mail = '"+obj.getMail()+"', ytprofile = '"+obj.getYtprofile()+"', spprofile = '"+obj.getSpprofile()+"', deprofile = '"+obj.getDeprofile()+"' WHERE id = "+obj.getId();
+            String upd = "UPDATE user SET username = '"+obj.getUsername()+"', password = '"+obj.getPassword()+"', mail = '"+obj.getMail()+"', ytprofile = '"+obj.getYtprofile()+"', spprofile = '"+obj.getSpprofile()+"', deprofile = '"+obj.getDeprofile()+"' WHERE id = "+obj.getId();
             stm.executeUpdate(upd);
             obj = this.find(obj.getId());
+            stm.close();
             return obj;
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -102,8 +105,9 @@ public class UserDAO extends DAO<User>{
             Statement stm = this.connect.createStatement();
             String del = "DELETE FROM user WHERE id = "+obj.getId();
             stm.executeUpdate(del);
-            del = "DELETE FROM playlist WHERE creator_id = "+obj.getId();
+            del = "DELETE FROM playlist WHERE creator_id = "+obj.getId(); //TODO update to handle songByPlayList delete
             stm.executeUpdate(del);
+            stm.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -118,8 +122,10 @@ public class UserDAO extends DAO<User>{
             String request = "SELECT id FROM user";
             ResultSet res = stm.executeQuery(request);
             UserDAO p = new UserDAO();
-            while (res.next());
+            while (res.next())
                 list.add(p.find(res.getInt("id")));
+            stm.close();
+            return list;
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Database Error");
@@ -140,8 +146,10 @@ public class UserDAO extends DAO<User>{
             String request = "SELECT id FROM user WHERE"+"BITE";
             ResultSet res = stm.executeQuery(request);
             UserDAO p = new UserDAO();
-            while (res.next());
-            list.add(p.find(res.getInt("id")));
+            while (res.next())
+                list.add(p.find(res.getInt("id")));
+            stm.close();
+            return list;
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Database Error");

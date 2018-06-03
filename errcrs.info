@@ -1,0 +1,10 @@
+Correspondance Code d'erreur sens :
+
+    - 0 -> No error, everything went fine
+    - 1** -> DataBase
+    - 3** -> Settings
+        - 301 -> Couldn't save properties into file "server.properties" : 'File not Found'
+        - 302 -> Missing properties's field
+        - 303 -> Key not coherent to type (int requiring for example)
+        - 304 -> Couldn't load properties from file "server.properties"
+        - 305 -> Couldn't save properties into file "server.properties"

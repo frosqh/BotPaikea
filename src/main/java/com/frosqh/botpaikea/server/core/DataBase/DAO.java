@@ -1,4 +1,4 @@
-package com.frosqh.botpaikea.server.core;
+package com.frosqh.botpaikea.server.core.DataBase;
 
 import java.sql.Connection;
 import java.util.ArrayList;

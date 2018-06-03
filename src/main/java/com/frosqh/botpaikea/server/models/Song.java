@@ -6,14 +6,14 @@ public class Song {
     private String title;
     private String artist;
     private String localurl;
-    private String webur;
+    private String weburl;
 
     public Song(int id, String title, String artist, String localurl, String webur) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.localurl = localurl;
-        this.webur = webur;
+        this.weburl = webur;
     }
 
     public int getId() {
@@ -48,11 +48,11 @@ public class Song {
         this.localurl = localurl;
     }
 
-    public String getWebur() {
-        return webur;
+    public String getWeburl() {
+        return weburl;
     }
 
-    public void setWebur(String webur) {
-        this.webur = webur;
+    public void setWeburl(String webur) {
+        this.weburl = webur;
     }
 }

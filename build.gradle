@@ -21,8 +21,8 @@ repositories {
 }
 
 dependencies {
-    compile 'org.apache.logging:log4j-api:2.10.0'
-    compile 'org.apache.logging:log4j-core:2.10.0'
+    compile 'org.apache.logging.log4j:log4j-api:2.10.0'
+    compile 'org.apache.logging.log4j:log4j-core:2.10.0'
     compile 'com.jfoenix:jfoenix:1.7.0'
     compile 'org.xerial:sqlite-jdbc:3.7.2'
     compile 'org.controlsfx:controlsfx:8.0.5'

@@ -1,12 +1,17 @@
-package com.frosqh.botpaikea.server.core;
+package com.frosqh.botpaikea.server.core.DataBase;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DataBase {
+
+    final static Logger log = LogManager.getLogger(DataBase.class);
+
 
     public DataBase(){
         File db = new File("BotPaikea.db");
@@ -42,17 +47,19 @@ public class DataBase {
                     + "FOREIGN KEY (song_id) REFERENCES song(id),\n"
                     + "FOREIGN KEY (list_id) REFERENCES playlist(id)\n);";
 
-
-
             try {
                 Statement stm = connect.createStatement();
+                log.debug("Creating song table !");
                 stm.execute(tableSong);
+                log.debug("Creating user table !");
                 stm.execute(tableUser);
+                log.debug("Creating playlist table !");
                 stm.execute(tablePlayList);
+                log.debug("Creating songbylist table !");
                 stm.execute(tableSongByList);
+                log.debug("DataBase created");
             } catch (SQLException e) {
-                e.printStackTrace();
-                System.err.println("DataBase could not be created, please try again");
+                log.error("Database could not be created !");
                 db.delete();
             }
         }
