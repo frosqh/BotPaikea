@@ -2,9 +2,40 @@ Correspondance Code d'erreur sens :
 
     - 0 -> No error, everything went fine
     - 1** -> DataBase
+        - 10* -> On Load
+            - 101 -> Couldn't load JDBC driver
+            - 102 -> Couldn't load database
+            - 103 -> Couldn't create statement
+        - 11* -> Creating DataBase
+            - 111 -> Couldn't create Song Table
+            - 112 -> Couldn't create User Table
+            - 113 -> Couldn't create PlayList Table
+            - 114 -> Couldn't create SongByList Table
+        - 12* -> Song Table
+        - 13* -> User Table
+        - 14* -> PlayList Table
+            - 141 -> Error while getting playlist from DataBase
+            - 142 -> Error while creating playlist into DataBase
+            - 143 -> Error while updating playlist from DataBase
+            - 144 -> Error while deleting playlist from DataBase
+            - 145 -> Error while getting playlists from DataBase
+        - 15* -> SongByList Table
+
+
     - 3** -> Settings
         - 301 -> Couldn't save properties into file "server.properties" : 'File not Found'
         - 302 -> Missing properties's field
         - 303 -> Key not coherent to type (int requiring for example)
         - 304 -> Couldn't load properties from file "server.properties"
         - 305 -> Couldn't save properties into file "server.properties"
+
+
+
+
+
+
+
+    - 5** -> ?
+        - 50* -> ?
+        - 51* -> ?
+        - 520 -> Unkown error

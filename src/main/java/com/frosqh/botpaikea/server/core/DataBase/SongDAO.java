@@ -114,7 +114,7 @@ public class SongDAO extends DAO<Song>{
         ArrayList<Song> list = new ArrayList<>();
         try {
             Statement stm = this.connect.createStatement();
-            String request = "SELECT id FROM user";
+            String request = "SELECT id FROM song";
             ResultSet res = stm.executeQuery(request);
             SongDAO p = new SongDAO();
             while (res.next())
@@ -145,11 +145,10 @@ public class SongDAO extends DAO<Song>{
             }
             where = whereB.toString().substring(0,whereB.lastIndexOf("A")-1);
         }
-        System.out.println(where);
         ArrayList<Song> list = new ArrayList<>();
         try {
             Statement stm = this.connect.createStatement();
-            String request = "SELECT id FROM user WHERE "+where;
+            String request = "SELECT id FROM song WHERE "+where;
             ResultSet res = stm.executeQuery(request);
             SongDAO p = new SongDAO();
             while (res.next())

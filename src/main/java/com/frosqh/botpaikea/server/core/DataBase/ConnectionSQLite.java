@@ -1,44 +1,45 @@
 package com.frosqh.botpaikea.server.core.DataBase;
 
-import javafx.scene.control.Alert;
+import com.frosqh.botpaikea.server.core.Session;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Permet l'instanciation d'une connection SQLite vers la base de données.
+ * Garantit également l'unicité de la connexion.
+ * @author Frosqh
+ * @version 0.1
+ */
 public class ConnectionSQLite {
 
-    private static String fileName = "BotPaikea.db";
+    public static String fileName = "BotPaikea.db"; //Par défaut, changé par Session.loadSettings
 
     private static String url = "jdbc:sqlite:"+fileName;
 
     private static Connection connect;
 
-    public static Connection getInstance(){
+    private final static Logger log = LogManager.getLogger(ConnectionSQLite.class);
+
+    /**
+     * Garantit le singleton de la connexion SQLite.
+     * @return La connexion SQLite déja établie ou une nouvelle connexion  si aucune n'existe.
+     * @since 0.1
+     */
+    static Connection getInstance(){
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("JDBC Error");
-            alert.setHeaderText("Error on startup");
-            alert.setResizable(true);
-            alert.setContentText("Error while loading the JDBC driver");
-            alert.showAndWait();
-            System.exit(0);
+            Session.throwError(log,true,101,"Couldn't load JDBC driver");
         }
-
         if (connect == null){
             try {
                 connect = DriverManager.getConnection(url);
             } catch (SQLException e) {
-                e.printStackTrace();
-                /*Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("JDBC Error");
-                alert.setHeaderText("Error on startup");
-                alert.setResizable(true);
-                alert.setContentText("Error while loading the database");
-                alert.showAndWait();*/
-                System.exit(0);
+                Session.throwError(log, true, 102, "Couldn't load the database");
             }
         }
         return connect;

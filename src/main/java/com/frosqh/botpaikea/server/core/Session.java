@@ -1,5 +1,6 @@
 package com.frosqh.botpaikea.server.core;
 
+import com.frosqh.botpaikea.server.core.DataBase.ConnectionSQLite;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ public class Session {
     private static final String properties =
             "#Bot Paikea Server Properties\n" +
             "database=BotPaikea.db\n" +
+            "dirs=C:\\Users\\Admin\\Music\n"+
             "";
 
     public static boolean isInit() {
@@ -74,6 +76,7 @@ public class Session {
         if (!checkSettingsIntegrity()){
             throwError(log,true);
         }
+        ConnectionSQLite.fileName = settings.get("database");
     }
 
     private static void createSettings() {
@@ -94,13 +97,8 @@ public class Session {
     
     private static boolean checkSettingsIntegrity(){
         Set<String> keySet = settings.keySet();
-        for (String key : keySet){
-            switch (key){
-                //TODO Check for each int requiring setting
-            }
-        }
         if (!keySet.contains("database")) {
-            if (errno==302 )
+            if (errno==302)
                 errmsg += ", database";
             else
                 errmsg = "Missing properties's field : database";

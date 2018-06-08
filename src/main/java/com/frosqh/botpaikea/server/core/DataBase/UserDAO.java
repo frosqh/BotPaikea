@@ -70,7 +70,7 @@ public class UserDAO extends DAO<User>{
         } catch (SQLException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("DataBase Error");
-            alert.setHeaderText("Error while creating user from database");
+            alert.setHeaderText("Error while creating user in database");
             alert.setResizable(true);
             alert.setContentText(e.getMessage());
             alert.showAndWait();

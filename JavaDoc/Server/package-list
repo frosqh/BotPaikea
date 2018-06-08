@@ -1,0 +1,5 @@
+com.frosqh.botpaikea.server
+com.frosqh.botpaikea.server.controllers
+com.frosqh.botpaikea.server.core
+com.frosqh.botpaikea.server.core.DataBase
+com.frosqh.botpaikea.server.models

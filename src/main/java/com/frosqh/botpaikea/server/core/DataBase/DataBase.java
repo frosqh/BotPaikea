@@ -1,5 +1,7 @@
 package com.frosqh.botpaikea.server.core.DataBase;
 
+import com.frosqh.botpaikea.server.core.DiskFileExplorer;
+import com.frosqh.botpaikea.server.core.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,13 +10,24 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Représente la base donnée, correspond majoritairement à sa création.
+ * @see ConnectionSQLite
+ * @see DAO
+ * @author Frosqh
+ * @version 0.1
+ */
 public class DataBase {
 
-    final static Logger log = LogManager.getLogger(DataBase.class);
+    private final static Logger log = LogManager.getLogger(DataBase.class);
 
-
+    /**
+     * Permet la création de la base de données.
+     * @since 0.1
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public DataBase(){
-        File db = new File("BotPaikea.db");
+        File db = new File(Session.getSettings().get("database"));
         if (!db.exists()) {
             Connection connect = ConnectionSQLite.getInstance();
 
@@ -47,21 +60,51 @@ public class DataBase {
                     + "FOREIGN KEY (song_id) REFERENCES song(id),\n"
                     + "FOREIGN KEY (list_id) REFERENCES playlist(id)\n);";
 
+            Statement stm = null;
             try {
-                Statement stm = connect.createStatement();
-                log.debug("Creating song table !");
-                stm.execute(tableSong);
-                log.debug("Creating user table !");
-                stm.execute(tableUser);
-                log.debug("Creating playlist table !");
-                stm.execute(tablePlayList);
-                log.debug("Creating songbylist table !");
-                stm.execute(tableSongByList);
-                log.debug("DataBase created");
+                stm = connect.createStatement();
             } catch (SQLException e) {
-                log.error("Database could not be created !");
+                Session.throwError(log,true,103,"Couldn't create statement on database creation");
+            }
+            assert stm != null;
+            log.debug("Creating song table !");
+            try {
+                stm.execute(tableSong);
+            } catch (SQLException e) {
+                Session.throwError(log,true,111, "Couldn't create Song table");
                 db.delete();
             }
+            log.debug("Creating user table !");
+            try {
+                stm.execute(tableUser);
+            } catch (SQLException e) {
+                Session.throwError(log,true,112, "Couldn't create User table");
+                db.delete();
+            }
+            log.debug("Creating playlist table !");
+            try {
+                stm.execute(tablePlayList);
+            } catch (SQLException e) {
+                Session.throwError(log,true,113, "Couldn't create PlayList table");
+                db.delete();
+            }
+            log.debug("Creating songbylist table !");
+            try {
+                stm.execute(tableSongByList);
+            } catch (SQLException e) {
+                Session.throwError(log,true,114, "Couldn't create SongByList table");
+                db.delete();
+            }
+            log.debug("DataBase created");
+        }
+    }
+
+    public void refreshSongs() {
+        String[] files = Session.getSettings().get("dirs").split(";");
+        for (String f : files){
+            System.out.println(f);
+            DiskFileExplorer dfe = new DiskFileExplorer(f,true);
+            dfe.refreshDataBase();
         }
     }
 }

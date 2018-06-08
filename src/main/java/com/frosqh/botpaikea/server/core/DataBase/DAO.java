@@ -3,8 +3,15 @@ package com.frosqh.botpaikea.server.core.DataBase;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+/**
+ * Gestionnaire de la base de données.
+ * @see DataBase
+ * @param <T> Le type des éléments à manipuler.
+ * @author Frosqh
+ * @version 0.1
+ */
 public abstract class DAO<T> {
-    public Connection connect = ConnectionSQLite.getInstance();
+    Connection connect = ConnectionSQLite.getInstance();
 
     public abstract T find(int id);
 

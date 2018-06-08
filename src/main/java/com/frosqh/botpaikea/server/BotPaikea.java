@@ -19,7 +19,7 @@ public class BotPaikea extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("/com/frosqh/botpaikea/server/views/Home.fxml"));
+        Parent root = FXMLLoader.load(BotPaikea.class.getResource("/com/frosqh/botpaikea/server/views/Home.fxml"));
         primaryStage.setTitle("BotPaikea");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -27,10 +27,11 @@ public class BotPaikea extends Application{
 
 
     public static void main(String[] args) throws IOException {
+        log.debug("Executing main() method");
         File properties = new File("./server.properties");
         Session.setInit(properties.exists());
-        log.debug("Executing main() method");
         DataBase db = new DataBase();
+        db.refreshSongs();
         launch(args);
     }
 }
