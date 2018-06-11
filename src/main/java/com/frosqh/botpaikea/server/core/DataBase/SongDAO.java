@@ -96,7 +96,7 @@ public class SongDAO extends DAO<Song>{
             Statement stm = this.connect.createStatement();
             String del = "DELETE FROM song WHERE id = "+obj.getId();
             stm.executeUpdate(del);
-            del = "DELETE FROM songbyplaylist WHERE song_id = "+obj.getId();
+            del = "DELETE FROM songbylist WHERE song_id = "+obj.getId();
             stm.executeUpdate(del);
             stm.close();
         } catch (SQLException e) {
