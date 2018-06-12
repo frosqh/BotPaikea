@@ -36,7 +36,7 @@ public class SongDAO extends DAO<Song>{
     public Song create(Song obj) {
         try {
             Statement stm = this.connect.createStatement();
-            String select = "SELECT MAX(id) AS max_id FROM song";
+            String select = "SELECT MAX(id) AS max_id FROM song"; //Select *
             ResultSet result = stm.executeQuery(select);
             int id = 1;
             if (result.next()){
