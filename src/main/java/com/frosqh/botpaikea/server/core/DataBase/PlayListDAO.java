@@ -3,7 +3,6 @@ package com.frosqh.botpaikea.server.core.DataBase;
 import com.frosqh.botpaikea.server.core.Session;
 import com.frosqh.botpaikea.server.models.PlayList;
 import com.frosqh.botpaikea.server.models.User;
-import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,13 +39,7 @@ public class PlayListDAO extends DAO<PlayList> {
             stm.close();
             return playList;
         } catch (SQLException e) {
-            Session.throwError(log,141,"Error while getting playlist from DataBase : "+e.getMessage());
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("DataBase Error");
-            alert.setHeaderText("Error while getting playlist from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,5,false,e.getMessage(),"playlist");
         }
         return null;
     }
@@ -76,23 +69,11 @@ public class PlayListDAO extends DAO<PlayList> {
             prepare.close();
             return find(id);
         } catch (SQLException e) {
-            Session.throwError(log,142,"Error while creating playlist in DataBase : "+e.getMessage());
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("DataBase Error");
-            alert.setHeaderText("Error while creating playlist in database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,6,false,e.getMessage(),"playlist");
         }
-
         return null;
     }
 
-    /**
-     * Actualise un élément dans la base de données
-     * @param obj
-     * @return
-     */
     @Override
     public PlayList update(PlayList obj) {
         try {
@@ -104,13 +85,7 @@ public class PlayListDAO extends DAO<PlayList> {
             stm.close();
             return obj;
         } catch (SQLException e) {
-            Session.throwError(log,143,"Error while updating playlist from DataBase : "+e.getMessage());
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while updating playlist from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,7,false,e.getMessage(),"playlist");
         }
         return null;
     }
@@ -125,13 +100,7 @@ public class PlayListDAO extends DAO<PlayList> {
             stm.executeUpdate(del);
             stm.close();
         } catch (SQLException e) {
-            Session.throwError(log,144,"Error while deleting playlist from DataBase : "+e.getMessage());
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while deleting playlist from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,8,false,e.getMessage(),"playlist");
         }
 
     }
@@ -149,13 +118,7 @@ public class PlayListDAO extends DAO<PlayList> {
             stm.close();
             return list;
         } catch (SQLException e) {
-            Session.throwError(log,145,"Error while getting playlists from DataBase : "+e.getMessage());
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while getting playlists from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,9,false,e.getMessage(),"playlist");
         }
         return null;
     }
@@ -183,13 +146,7 @@ public class PlayListDAO extends DAO<PlayList> {
             stm.close();
             return list;
         } catch (SQLException e) {
-            Session.throwError(log,145,"Error while getting playlists from DataBase : "+e.getMessage());
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while getting playlists from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,9,false,e.getMessage(),"playlist");
         }
         return null;
     }

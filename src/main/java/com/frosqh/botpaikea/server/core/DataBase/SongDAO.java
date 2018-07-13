@@ -1,7 +1,9 @@
 package com.frosqh.botpaikea.server.core.DataBase;
 
+import com.frosqh.botpaikea.server.core.Session;
 import com.frosqh.botpaikea.server.models.Song;
-import javafx.scene.control.Alert;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,8 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+
 public class SongDAO extends DAO<Song>{
 
+    private final static Logger log = LogManager.getLogger(SongDAO.class);
 
     @Override
     public Song find(int id) {
@@ -22,12 +26,7 @@ public class SongDAO extends DAO<Song>{
             stm.close();
             return song;
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while getting song from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,5,false,e.getMessage(),"song");
         }
         return null;
     }
@@ -56,12 +55,7 @@ public class SongDAO extends DAO<Song>{
             prepare.close();
             return find(id);
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while creating song into database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,6,false,e.getMessage(),"song");
         }
         return null;
     }
@@ -80,12 +74,7 @@ public class SongDAO extends DAO<Song>{
             return obj;
 
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while updating song from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,7,false,e.getMessage(),"song");
         }
         return null;
     }
@@ -100,12 +89,7 @@ public class SongDAO extends DAO<Song>{
             stm.executeUpdate(del);
             stm.close();
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while deleting song from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,8,false,e.getMessage(),"song");
         }
     }
 
@@ -122,12 +106,7 @@ public class SongDAO extends DAO<Song>{
             stm.close();
             return list;
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while getting songs from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            Session.throwError(log,9,false,e.getMessage(),"song");
         }
         return null;
     }
@@ -156,12 +135,7 @@ public class SongDAO extends DAO<Song>{
             stm.close();
             return list;
         } catch (SQLException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText("Error while getting songs from database");
-            alert.setResizable(true);
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+           Session.throwError(log,9,false,e.getMessage(),"song");
         }
         return null;
     }

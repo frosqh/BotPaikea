@@ -4,7 +4,10 @@ import com.frosqh.botpaikea.server.core.DataBase.SongDAO;
 import com.frosqh.botpaikea.server.models.Song;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +16,16 @@ public class Player {
     private MediaPlayer mediaPlayer;
     private List<Song> history;
     private List<Song> queue;
+    private final static Logger log = LogManager.getLogger(Player.class);
 
     public Player(MediaPlayer player){
         mediaPlayer = player;
+        history = new ArrayList<>();
+        queue = new ArrayList<>();
         initPlayer();
+        Session.getStage().setOnCloseRequest(windowEvent -> {
+            mediaPlayer.stop();
+        });
     }
 
     public void next(){
@@ -30,7 +39,9 @@ public class Player {
             queue.add(nextSong);
         }
         nextSong = queue.get(0);
-        Media media = new Media(nextSong.getLocalurl());
+        log.info("♪ Now Playing - "+nextSong.getTitle()+" ♪");
+        File f = new File(nextSong.getLocalurl());
+        Media media = new Media(f.toURI().toString());
         mediaPlayer.dispose();
         mediaPlayer = new MediaPlayer(media);
         initPlayer();
@@ -56,5 +67,9 @@ public class Player {
     private void initPlayer(){
         mediaPlayer.setVolume(50);
         mediaPlayer.setOnEndOfMedia(() -> next());
+    }
+
+    public void add(Song newSong){
+        queue.add(newSong);
     }
 }

@@ -64,36 +64,36 @@ public class DataBase {
             try {
                 stm = connect.createStatement();
             } catch (SQLException e) {
-                Session.throwError(log,true,103,"Couldn't create statement on database creation");
+                Session.throwError(log,3,true," on database creation");
             }
             assert stm != null;
             log.debug("Creating song table !");
             try {
                 stm.execute(tableSong);
             } catch (SQLException e) {
-                Session.throwError(log,true,111, "Couldn't create Song table");
                 db.delete();
+                Session.throwError(log,4,true,"","Song");
             }
             log.debug("Creating user table !");
             try {
                 stm.execute(tableUser);
             } catch (SQLException e) {
-                Session.throwError(log,true,112, "Couldn't create User table");
                 db.delete();
+                Session.throwError(log,4,true,"","User");
             }
             log.debug("Creating playlist table !");
             try {
                 stm.execute(tablePlayList);
             } catch (SQLException e) {
-                Session.throwError(log,true,113, "Couldn't create PlayList table");
                 db.delete();
+                Session.throwError(log,4,true,"","PlayList");
             }
             log.debug("Creating songbylist table !");
             try {
                 stm.execute(tableSongByList);
             } catch (SQLException e) {
-                Session.throwError(log,true,114, "Couldn't create SongByList table");
                 db.delete();
+                Session.throwError(log,4,true,"","SongByList");
             }
             log.debug("DataBase created");
         }
@@ -102,7 +102,6 @@ public class DataBase {
     public void refreshSongs() {
         String[] files = Session.getSettings().get("dirs").split(";");
         for (String f : files){
-            System.out.println(f);
             DiskFileExplorer dfe = new DiskFileExplorer(f,true);
             dfe.refreshDataBase();
         }

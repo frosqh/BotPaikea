@@ -58,29 +58,28 @@ public class DiskFileExplorer {
         ArrayList<Song> toDelete = new ArrayList<>();
         ArrayList<Song> toAdd = new ArrayList<>();
         List<String> paths = Arrays.asList(listDirectory(initialPath).split("\n"));
-        /*File f = new File(songs.get(0).getLocalurl());
-        MediaPlayer mediaPlayer = new MediaPlayer(new Media(f.toURI().toString()));
-        Player player = new Player(mediaPlayer);
-        player.play();*/
-        //TODO Move this to appropriate area (and create a thread, should be better :p)
 
         for (Song s : songs){
-            String URL = s.getLocalurl();
+            String URL1 = s.getLocalurl();
+            String URL = URL1.replace(initialPath,"");
+            URL = URL.substring(1);
             if (URL!=null && !paths.contains(URL)){
+                System.out.println(URL);
                 songDAO.delete(s);
             } else {
-                paths.remove(URL);
+                paths.remove(URL1);
             }
         }
         LocalDateTime now = LocalDateTime.now();
         if (paths.size()>0){
             for (String p : paths){
-                Song temp = new Song(-1,p.substring(0,p.indexOf("_-_")).replace("_"," "),p.substring(p.indexOf("_-_")+3).replace("_"," "),initialPath+"\\"+p,null);
+                Song temp = new Song(-1,p.substring(p.indexOf("_-_")+3).replace("_"," "),p.substring(0,p.indexOf("_-_")).replace("_"," "),initialPath+"\\"+p,null);
                 //TODO Afficher une fenêtre
                 songDAO.create(temp);
             }
         }
         LocalDateTime then = LocalDateTime.now();
         System.out.println(ChronoUnit.SECONDS.between(now,then)+"s");
+
     }
 }

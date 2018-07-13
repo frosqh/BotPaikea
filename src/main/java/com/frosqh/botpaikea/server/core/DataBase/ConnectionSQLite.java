@@ -33,13 +33,13 @@ public class ConnectionSQLite {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            Session.throwError(log,true,101,"Couldn't load JDBC driver");
+            Session.throwError(log,1,true);
         }
         if (connect == null){
             try {
                 connect = DriverManager.getConnection(url);
             } catch (SQLException e) {
-                Session.throwError(log, true, 102, "Couldn't load the database");
+                Session.throwError(log, 2,true);
             }
         }
         return connect;
