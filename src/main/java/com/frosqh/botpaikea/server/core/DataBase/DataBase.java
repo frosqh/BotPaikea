@@ -15,7 +15,8 @@ import java.sql.Statement;
  * @see ConnectionSQLite
  * @see DAO
  * @author Frosqh
- * @version 0.1
+ * @author Rheoklash
+ * @version 0.2
  */
 public class DataBase {
 
@@ -60,6 +61,12 @@ public class DataBase {
                     + "FOREIGN KEY (song_id) REFERENCES song(id),\n"
                     + "FOREIGN KEY (list_id) REFERENCES playlist(id)\n);";
 
+            String tableGame = "CREATE TABLE IF NOT EXISTS game (\n"
+                    + "id INTEGER PRIMARY KEY,\n"
+                    + "title TEXT NOT NULL,\n"
+                    + "game_id TEXT NOT NULL,\n"
+                    + "tags TEXT\n);";
+
             Statement stm = null;
             try {
                 stm = connect.createStatement();
@@ -94,6 +101,13 @@ public class DataBase {
             } catch (SQLException e) {
                 db.delete();
                 Session.throwError(log,4,true,"","SongByList");
+            }
+            log.debug("Creating game table !");
+            try {
+                stm.execute(tableGame);
+            } catch (SQLException e) {
+                db.delete();
+                Session.throwError(log,4,true,"","Game");
             }
             log.debug("DataBase created");
         }
