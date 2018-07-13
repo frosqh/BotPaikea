@@ -19,6 +19,8 @@ public class Session {
     private static HashMap<Integer,String> errors;
     private static int errno;
     private static String errmsg;
+    private static Player player;
+    private static TS3Api ts3Api;
     private final static Logger log = LogManager.getLogger(Session.class);
     private final static String[] keywords={"database"};
 
@@ -179,5 +181,21 @@ public class Session {
         logg.error("\033[0;31m"+"["+errno+"] "+errmsg+"\033[0m");
         if (critical)
             System.exit(errno);
+    }
+
+    public static void setPlayer(Player player) {
+        Session.player = player;
+    }
+
+    public static Player getPlayer(){
+        return player;
+    }
+
+    public static TS3Api getTs3Api() {
+        return ts3Api;
+    }
+
+    public static void setTs3Api(TS3Api ts3Api) {
+        Session.ts3Api = ts3Api;
     }
 }

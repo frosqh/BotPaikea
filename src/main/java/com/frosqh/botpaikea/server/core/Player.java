@@ -16,7 +16,23 @@ public class Player {
     private MediaPlayer mediaPlayer;
     private List<Song> history;
     private List<Song> queue;
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+
+    private boolean isPlaying;
     private final static Logger log = LogManager.getLogger(Player.class);
+
+    public Player(){
+        history = new ArrayList<>();
+        queue = new ArrayList<>();
+        isPlaying=false;
+    }
 
     public Player(MediaPlayer player){
         mediaPlayer = player;
@@ -26,11 +42,19 @@ public class Player {
         Session.getStage().setOnCloseRequest(windowEvent -> {
             mediaPlayer.stop();
         });
+        isPlaying=false;
+    }
+
+    public Song getPlaying(){
+        return queue.get(0);
     }
 
     public void next(){
-        mediaPlayer.stop();
-        history.add(queue.remove(0));
+        if (mediaPlayer!=null)
+            mediaPlayer.stop();
+        isPlaying=false;
+        if (!queue.isEmpty())
+            history.add(queue.remove(0));
         Song nextSong;
         if (queue.isEmpty()){ //Choose a random song in our song List;
             SongDAO songDAO = new SongDAO();
@@ -42,18 +66,31 @@ public class Player {
         log.info("♪ Now Playing - "+nextSong.getTitle()+" ♪");
         File f = new File(nextSong.getLocalurl());
         Media media = new Media(f.toURI().toString());
-        mediaPlayer.dispose();
+        if (mediaPlayer!=null)
+            mediaPlayer.dispose();
         mediaPlayer = new MediaPlayer(media);
+        Session.getStage().setOnCloseRequest(windowEvent -> {
+            mediaPlayer.stop();
+        });
         initPlayer();
         mediaPlayer.play();
+        isPlaying=true;
     }
 
     public void play(){
-        mediaPlayer.play();
+        if (mediaPlayer != null) {
+            if (!isPlaying)
+                mediaPlayer.play();
+            isPlaying = true;
+        }
     }
 
     public void pause(){
-        mediaPlayer.pause();
+        if (mediaPlayer != null) {
+            if (isPlaying)
+                mediaPlayer.pause();
+            isPlaying = false;
+        }
     }
 
     public String getTimeCode(){
