@@ -113,6 +113,9 @@ public class DataBase {
         }
     }
 
+    /**
+     * Rafraîchit la base de données des chansons à partir des différents dossier précisés dans le 'server.properties'
+     */
     public void refreshSongs() {
         String[] files = Session.getSettings().get("dirs").split(";");
         for (String f : files){

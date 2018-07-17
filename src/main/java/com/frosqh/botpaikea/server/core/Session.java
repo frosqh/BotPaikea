@@ -7,7 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -22,12 +24,15 @@ public class Session {
     private static Player player;
     private static TS3Api ts3Api;
     private final static Logger log = LogManager.getLogger(Session.class);
-    private final static String[] keywords={"database"};
+    private final static String[] keywords={"database","dirs","port"};
+    private final static String[] intExp = {"port"};
+    private static final HashMap<String,Thread> clients = new HashMap<>();
 
     private static final String properties =
             "#Bot Paikea Server Properties\n" +
             "database=BotPaikea.db\n" +
-            "dirs=C:\\Users\\Admin\\Music\n"+
+            "dirs=C:\\Users\\Admin\\Music\n "+
+            "port=2302\n"+
             "";
 
     public static boolean isInit() {
@@ -35,12 +40,12 @@ public class Session {
     }
 
     public static void setInit(boolean init) {
+        loadErrorMessages();
         if (init)
             loadSettings();
         else
             createSettings();
         Session.init = init;
-        loadErrorMessages();
     }
 
     public static Stage getStage() {
@@ -60,25 +65,25 @@ public class Session {
         try {
             FileReader propertiesReader = new FileReader("./server.properties");
             BufferedReader bufRead = new BufferedReader(propertiesReader);
-            String line = null;
+            String line;
             while ((line = bufRead.readLine())!=null){
                 if (!line.startsWith("#")) {
                     String[] prop = line.split("=");
                     String key = prop[0];
                     String value = prop[1];
+                    if (Arrays.asList(intExp).contains(key) && !Utils.isInteger(value))
+                        throwError(log,12,true,"Integer expected","size");
                     settings.put(key,value);
                 }
             }
             bufRead.close();
             propertiesReader.close();
-        } catch (FileNotFoundException e) {
-            throwError(log,304,true,e.getMessage());
         } catch (IOException e) {
-            throwError(log,304,false,e.getMessage());
+            throwError(log,11,true,e.getMessage(),"server.properties");
         }
         String missings = checkSettingsIntegrity();
         if (!missings.equals(""))
-            throwError(log,302, missings);
+            throwError(log,13,true,missings);
         ConnectionSQLite.fileName = settings.get("database");
     }
 
@@ -87,7 +92,7 @@ public class Session {
         try {
             FileReader errorReader = new FileReader(BotPaikea.class.getResource("/com/frosqh/botpaikea/server/properties/error.properties").getFile());
             BufferedReader bufRead = new BufferedReader(errorReader);
-            String line = null;
+            String line;
             while ((line = bufRead.readLine()) != null) {
                 if (!line.startsWith("#") && !line.equals("")){
                     String[] prop = line.split(" = ");
@@ -98,12 +103,8 @@ public class Session {
             }
             bufRead.close();
             errorReader.close();
-        } catch (FileNotFoundException e) {
-            log.error("Couldn't load properties from file \"error.properties\" : 'File not Found'");
-            System.exit(306);
         } catch (IOException e) {
-            log.error("Couldn't load properties from file \"error.properties\" : "+e.getMessage());
-            System.exit(306);
+            throwError(log,11,true,e.getMessage(),"error.properties");
         }
     }
 
@@ -116,23 +117,22 @@ public class Session {
             propertiesWriter.close();
             loadSettings();
         } catch (IOException e) {
-            throwError(log,305,true,e.getMessage());
+            throwError(log,10,true,e.getMessage(),"server.properties");
         }
 
     }
     
     private static String checkSettingsIntegrity(){
         Set<String> keySet = settings.keySet();
-        int tempno = 302;
         ArrayList<String> errs = new ArrayList<>();
         for (String key : keywords){
             if (!keySet.contains(key))
                 errs.add(key);
         }
-        String res="";
+        StringBuilder res= new StringBuilder();
         for (String e : errs)
-            res+=e+", ";
-        if (!res.equals(""))
+            res.append(e).append(", ");
+        if (!res.toString().equals(""))
             return res.substring(0,res.length()-2);
         return "";
     }
@@ -147,9 +147,7 @@ public class Session {
             bufferedWriter.close();
             propertiesWriter.close();
         } catch (IOException e) {
-            errno=305;
-            errmsg="Couldn't save properties into file \"server.properties\" : "+e.getMessage();
-            throwError(log,true);
+            throwError(log,10,true,e.getMessage(),"server.properties");
         }
 
 
@@ -172,15 +170,18 @@ public class Session {
     public static void throwError(Logger logg, int eno, boolean critical, String add, String comp){
         errno = eno;
         if (!errors.containsKey(errno))
-            errno = 520;
+            errno = -1;
         errmsg = errors.get(errno).replace("...",comp)+add;
         throwError(logg,critical);
     }
 
-    public static void throwError(Logger logg, boolean critical){
+    private static void throwError(Logger logg, boolean critical){
         logg.error("\033[0;31m"+"["+errno+"] "+errmsg+"\033[0m");
-        if (critical)
+
+        if (critical) {
             System.exit(errno);
+            ts3Api.exit();
+        }
     }
 
     public static void setPlayer(Player player) {
@@ -197,5 +198,18 @@ public class Session {
 
     public static void setTs3Api(TS3Api ts3Api) {
         Session.ts3Api = ts3Api;
+    }
+
+    public static boolean hasClient(InetAddress inetAddress) {
+        return clients.containsKey(inetAddress.toString());
+    }
+
+    public static void stopClient(InetAddress inetAddress) {
+        clients.get(inetAddress.toString()).interrupt();
+        clients.remove(inetAddress.toString());
+    }
+
+    public static void addClient(InetAddress inetAddress, Server thread) {
+        clients.put(inetAddress.toString(),thread);
     }
 }

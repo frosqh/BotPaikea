@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 0.1
  */
 public abstract class DAO<T> {
-    Connection connect = ConnectionSQLite.getInstance();
+    final Connection connect = ConnectionSQLite.getInstance();
 
     public abstract T find(int id);
 

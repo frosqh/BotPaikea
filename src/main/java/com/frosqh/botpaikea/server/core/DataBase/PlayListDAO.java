@@ -74,6 +74,12 @@ public class PlayListDAO extends DAO<PlayList> {
         return null;
     }
 
+    /**
+     * Harmonise un objet entre sa version "Java" et son existence dans la base de données.
+     * @param obj L'objet Java à enregistrer.
+     * @return L'objet tiré de la base de données après harmonisation.
+     * @since 0.1
+     */
     @Override
     public PlayList update(PlayList obj) {
         try {
@@ -90,6 +96,11 @@ public class PlayListDAO extends DAO<PlayList> {
         return null;
     }
 
+    /**
+     * Supprime un objet de la base de données.
+     * @param obj L'objet à supprimer.
+     * @since 0.1
+     */
     @Override
     public void delete(PlayList obj) {
         try {
@@ -105,6 +116,11 @@ public class PlayListDAO extends DAO<PlayList> {
 
     }
 
+    /**
+     * Récupère la liste des playlists enregistrées dans la base de données.
+     * @return La liste des playlists enregistrées en base de données.
+     * @since 0.1
+     */
     @Override
     public ArrayList<PlayList> getList() {
         ArrayList<PlayList> list = new ArrayList<>();
@@ -123,6 +139,11 @@ public class PlayListDAO extends DAO<PlayList> {
         return null;
     }
 
+    /**
+     * Filtre les objets avec des critères passés en paramètres.
+     * @param args La liste des critère à appliquer, au format "SELECT * FROM ? WHERE arg1 AND arg2 AND ..."
+     * @return La liste des objets en base de données correspondant aux critères.
+     */
     @Override
     public ArrayList<PlayList> filter(String[] args) {
         String where;

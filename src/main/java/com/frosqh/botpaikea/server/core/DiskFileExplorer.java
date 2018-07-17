@@ -12,10 +12,8 @@ import java.util.List;
 
 public class DiskFileExplorer {
 
-    private String initialPath;
+    private final String initialPath;
     private Boolean recursivePath;
-    private int fileCount = 0;
-    private int dirCount = 0;
     private static final List<String> authExt = Arrays.asList("mp3","wav");
 
     public DiskFileExplorer(String path, Boolean subFolder){
@@ -42,11 +40,9 @@ public class DiskFileExplorer {
                 ext = s2.substring(j + 1);
             if (authExt.contains(ext)) {
                 s.append(s2).append("\n");
-                fileCount++;
             }
             if (f.isDirectory() && recursivePath) {
                 s.append(listDirectory(f.getAbsolutePath()));
-                dirCount++;
             }
         }
         return s.toString();
@@ -55,15 +51,13 @@ public class DiskFileExplorer {
     public void refreshDataBase(){
         SongDAO songDAO = new SongDAO();
         ArrayList<Song> songs = songDAO.getList();
-        ArrayList<Song> toDelete = new ArrayList<>();
-        ArrayList<Song> toAdd = new ArrayList<>();
         List<String> paths = Arrays.asList(listDirectory(initialPath).split("\n"));
 
         for (Song s : songs){
             String URL1 = s.getLocalurl();
             String URL = URL1.replace(initialPath,"");
             URL = URL.substring(1);
-            if (URL!=null && !paths.contains(URL)){
+            if (!paths.contains(URL)){
                 System.out.println(URL);
                 songDAO.delete(s);
             } else {

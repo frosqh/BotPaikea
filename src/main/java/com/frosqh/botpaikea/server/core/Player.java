@@ -14,7 +14,7 @@ import java.util.List;
 public class Player {
 
     private MediaPlayer mediaPlayer;
-    private List<Song> history;
+    private final List<Song> history;
     private List<Song> queue;
 
     public boolean isPlaying() {
@@ -31,17 +31,6 @@ public class Player {
     public Player(){
         history = new ArrayList<>();
         queue = new ArrayList<>();
-        isPlaying=false;
-    }
-
-    public Player(MediaPlayer player){
-        mediaPlayer = player;
-        history = new ArrayList<>();
-        queue = new ArrayList<>();
-        initPlayer();
-        Session.getStage().setOnCloseRequest(windowEvent -> {
-            mediaPlayer.stop();
-        });
         isPlaying=false;
     }
 
@@ -69,32 +58,59 @@ public class Player {
         if (mediaPlayer!=null)
             mediaPlayer.dispose();
         mediaPlayer = new MediaPlayer(media);
-        Session.getStage().setOnCloseRequest(windowEvent -> {
-            mediaPlayer.stop();
-        });
+        Session.getStage().setOnCloseRequest(windowEvent -> mediaPlayer.stop());
         initPlayer();
         mediaPlayer.play();
         isPlaying=true;
     }
 
-    public void play(){
+    public void prev(){
+        if (!history.isEmpty()){
+            if (mediaPlayer!=null)
+                mediaPlayer.stop();
+            queue.add(0,history.remove(history.size()-1));
+            Song nextSong = queue.get(0);
+            log.info("♪ Now Playing - "+nextSong.getTitle()+" ♪");
+            File f = new File(nextSong.getLocalurl());
+            Media media = new Media(f.toURI().toString());
+            if (mediaPlayer!=null)
+                mediaPlayer.dispose();
+            mediaPlayer = new MediaPlayer(media);
+            Session.getStage().setOnCloseRequest(windowEvent -> mediaPlayer.stop());
+            initPlayer();
+            mediaPlayer.play();
+            isPlaying=true;
+        }
+    }
+
+    public double getDuration(){
+        return mediaPlayer.getTotalDuration().toMillis();
+    }
+
+    public boolean play(){
         if (mediaPlayer != null) {
-            if (!isPlaying)
+            if (!isPlaying) {
                 mediaPlayer.play();
-            isPlaying = true;
+                isPlaying = true;
+                return true;
+            }
         }
+        return false;
     }
 
-    public void pause(){
+    public boolean pause(){
         if (mediaPlayer != null) {
-            if (isPlaying)
+            if (isPlaying) {
                 mediaPlayer.pause();
-            isPlaying = false;
+                isPlaying = false;
+                return true;
+            }
         }
+        return false;
     }
 
-    public String getTimeCode(){
-        return mediaPlayer.getCurrentTime().toString();
+    public double getTimeCode(){
+        return mediaPlayer.getCurrentTime().toMillis();
     }
 
     public double getVolume(){
@@ -103,7 +119,7 @@ public class Player {
 
     private void initPlayer(){
         mediaPlayer.setVolume(50);
-        mediaPlayer.setOnEndOfMedia(() -> next());
+        mediaPlayer.setOnEndOfMedia(this::next);
     }
 
     public void add(Song newSong){

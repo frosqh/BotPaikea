@@ -9,7 +9,7 @@ import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
 
 public class TS3Api {
     private com.github.theholywaffle.teamspeak3.TS3Api ts3Api;
-    private final String[] users = {"frosqh","Rheoklash","Izatof"};
+    private final String[] users = {"frosqh"/*,"Rheoklash","Izatof"*/};
     private final String paikeaSong = "\n" +
             "Uia mai koia, whakahuatia ake; \n" +
             "Ko wai te whare nei e?\n" +
@@ -37,6 +37,9 @@ public class TS3Api {
         ts3Api.login("BotPaikea","QKtuQmzq");
         ts3Api.selectVirtualServerById(1);
         ts3Api.setNickname("Bot Paikea");
+        if (ts3Api.isClientOnline(ts3Api.getClientByNameExact("Frosqh",true).getUniqueIdentifier())){
+            ts3Api.moveQuery(ts3Api.getClientByNameExact("Frosqh",true).getChannelId());
+        }
         final int clientId = ts3Api.whoAmI().getId();
         ts3Api.registerEvent(TS3EventType.TEXT_PRIVATE);
         ts3Api.addTS3Listeners(new TS3EventAdapter() {
@@ -78,17 +81,24 @@ public class TS3Api {
                             Session.getPlayer().next();
                             rep = "♫ Now playing - "+Session.getPlayer().getPlaying().getTitle()+" ♫";
                             break;
+                        case "!prev":
+                            Session.getPlayer().prev();
+                            rep = "♫ Now playing - "+Session.getPlayer().getPlaying().getTitle()+" ♫";
+                            break;
                         case "!pause":
                             if (Session.getPlayer().isPlaying())
                                 Session.getPlayer().pause();
                             else
-                                rep="Rien n'est en train d'être joué, réfléchit un peu ><";
+                                rep="Rien n'est en train d'être joué, réfléchis un peu ><";
                             break;
                         case "!play":
                             if (!Session.getPlayer().isPlaying())
-                                Session.getPlayer().play();
+                                if (Session.getPlayer().play())
+                                    rep="La lecture a bien été (re)prise !";
+                                else
+                                    rep="La lecture n'a pas pu être reprise, n'hésite pas à réessayer si cela te semble étrange.";
                             else
-                                rep="Ça joue déjà, réfléchit un peu ><";
+                                rep="Ça joue déjà, réfléchis un peu ><";
                             break;
                         case "merde":
                             rep="Diantre*";
@@ -131,5 +141,9 @@ public class TS3Api {
 
     public static void main(String[] args){
         new TS3Api();
+    }
+
+    public void exit() {
+        ts3Api.logout();
     }
 }

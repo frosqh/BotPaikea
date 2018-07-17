@@ -55,4 +55,9 @@ public class Song {
     public void setWeburl(String webur) {
         this.weburl = webur;
     }
+
+    @Override
+    public String toString(){
+        return title+" | "+artist;
+    }
 }

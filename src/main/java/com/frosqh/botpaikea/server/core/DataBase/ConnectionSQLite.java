@@ -16,9 +16,9 @@ import java.sql.SQLException;
  */
 public class ConnectionSQLite {
 
-    public static String fileName = "BotPaikea.db"; //Par défaut, changé par Session.loadSettings
+    public static String fileName = "BotPaikea.db";
 
-    private static String url = "jdbc:sqlite:"+fileName;
+    private static final String url = "jdbc:sqlite:"+fileName;
 
     private static Connection connect;
 
