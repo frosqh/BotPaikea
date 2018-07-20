@@ -15,6 +15,7 @@ import java.util.Set;
 
 public class Session {
 
+    public static boolean debug = false;
     private static boolean init;
     private static Stage stage;
     private static HashMap<String,String> settings;
@@ -88,10 +89,17 @@ public class Session {
     }
 
     private static void loadErrorMessages() {
+        System.out.println("Oh yeah, comment que ça va ? :P");
         errors = new HashMap<>();
         try {
-            FileReader errorReader = new FileReader(BotPaikea.class.getResource("/com/frosqh/botpaikea/server/properties/error.properties").getFile());
-            BufferedReader bufRead = new BufferedReader(errorReader);
+            String name;
+            if (debug)
+                name = "/com/frosqh/botpaikea/server/properties/error.properties/";
+            else
+                name = "properties/error.properties";
+            BufferedReader bufRead = new BufferedReader(new InputStreamReader(BotPaikea.class.getResourceAsStream(name)));
+            //FileReader errorReader = new FileReader(BotPaikea.class.getResource(name).getFile());
+            //BufferedReader bufRead = new BufferedReader(errorReader);
             String line;
             while ((line = bufRead.readLine()) != null) {
                 if (!line.startsWith("#") && !line.equals("")){
@@ -102,9 +110,11 @@ public class Session {
                 }
             }
             bufRead.close();
-            errorReader.close();
+            //errorReader.close();
         } catch (IOException e) {
-            throwError(log,11,true,e.getMessage(),"error.properties");
+            e.printStackTrace();
+            System.exit(52);
+            //throwError(log,11,true,e.getMessage(),"error.properties");
         }
     }
 

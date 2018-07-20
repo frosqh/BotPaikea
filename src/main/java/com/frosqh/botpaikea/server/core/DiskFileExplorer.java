@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class DiskFileExplorer {
@@ -51,17 +52,16 @@ public class DiskFileExplorer {
     public void refreshDataBase(){
         SongDAO songDAO = new SongDAO();
         ArrayList<Song> songs = songDAO.getList();
-        List<String> paths = Arrays.asList(listDirectory(initialPath).split("\n"));
+        List<String> paths = new LinkedList<>(Arrays.asList(listDirectory(initialPath).split("\n")));
 
         for (Song s : songs){
             String URL1 = s.getLocalurl();
             String URL = URL1.replace(initialPath,"");
             URL = URL.substring(1);
             if (!paths.contains(URL)){
-                System.out.println(URL);
                 songDAO.delete(s);
             } else {
-                paths.remove(URL1);
+                paths.remove(URL);
             }
         }
         LocalDateTime now = LocalDateTime.now();

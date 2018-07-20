@@ -1,6 +1,8 @@
 apply plugin: 'idea'
 apply plugin: 'java'
 
+compileJava.options.encoding = 'UTF-8'
+
 group = 'com.frosqh.botpaikea'
 version = '0.1'
 
@@ -10,8 +12,8 @@ task fatJarServer(type: Jar){
                 'Implementation-Version': 0.1,
                 'Main-Class': 'com.frosqh.botpaikea.server.BotPaikea'
     }
-    baseName = project.name+'-all'
-    from {configurations.compile.collet {it.isDirectory() ? it:zipTree(it)}}
+    baseName = project.name+'fat'
+    from {configurations.compile.collect {it.isDirectory() ? it:zipTree(it)}}
     with jar
 }
 

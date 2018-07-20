@@ -36,6 +36,7 @@ public class BotPaikea extends Application{
         {
             System.out.println(mixerInfo[i].getName());
         }*/
+        System.setProperty( "file.encoding", "UTF-8" );
         log.debug("Executing main() method");
         File properties = new File("./server.properties");
         Session.setInit(properties.exists());
