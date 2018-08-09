@@ -34,6 +34,7 @@ public class Session {
             "database=BotPaikea.db\n" +
             "dirs=C:\\Users\\Admin\\Music\n "+
             "port=2302\n"+
+            "bot_name=Bot Paikea"+
             "";
 
     public static boolean isInit() {
@@ -73,7 +74,7 @@ public class Session {
                     String key = prop[0];
                     String value = prop[1];
                     if (Arrays.asList(intExp).contains(key) && !Utils.isInteger(value))
-                        throwError(log,12,true,"Integer expected","size");
+                        throwError(log,12,true,"Integer expected",key);
                     settings.put(key,value);
                 }
             }
@@ -89,7 +90,6 @@ public class Session {
     }
 
     private static void loadErrorMessages() {
-        System.out.println("Oh yeah, comment que ça va ? :P");
         errors = new HashMap<>();
         try {
             String name;

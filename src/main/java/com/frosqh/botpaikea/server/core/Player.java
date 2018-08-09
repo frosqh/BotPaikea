@@ -16,6 +16,7 @@ public class Player {
     private MediaPlayer mediaPlayer;
     private final List<Song> history;
     private List<Song> queue;
+    private double vol = 50;
 
     public boolean isPlaying() {
         return isPlaying;
@@ -113,16 +114,29 @@ public class Player {
         return mediaPlayer.getCurrentTime().toMillis();
     }
 
+    public void setVolume(double volume){
+        vol = volume;
+        mediaPlayer.setVolume(vol);
+    }
+
     public double getVolume(){
         return mediaPlayer.getVolume();
     }
 
     private void initPlayer(){
-        mediaPlayer.setVolume(50);
+        mediaPlayer.setVolume(vol);
         mediaPlayer.setOnEndOfMedia(this::next);
     }
 
     public void add(Song newSong){
         queue.add(newSong);
+    }
+
+    public void toggleAutoPlay() {
+        if (mediaPlayer.getOnEndOfMedia()==null){
+            mediaPlayer.setOnEndOfMedia(this::next);
+        } else {
+            mediaPlayer.setOnEndOfMedia(null);
+        }
     }
 }

@@ -9,7 +9,7 @@ import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
 
 public class TS3Api {
     private com.github.theholywaffle.teamspeak3.TS3Api ts3Api;
-    private final String[] users = {"frosqh"/*,"Rheoklash","Izatof"*/};
+    private final String[] users = {"frosqh"/*,"Rheoklash","Izatof","Harinman"*/};
     private final String paikeaSong = "\n" +
             "Uia mai koia, whakahuatia ake; \n" +
             "Ko wai te whare nei e?\n" +
@@ -36,8 +36,11 @@ public class TS3Api {
         ts3Api = ts3Query.getApi();
         ts3Api.login("BotPaikea","QKtuQmzq");
         ts3Api.selectVirtualServerById(1);
-        ts3Api.setNickname("Bot Paikea");
-        if (ts3Api.isClientOnline(ts3Api.getClientByNameExact("Frosqh",true).getUniqueIdentifier())){
+        System.out.println(Session.getSettings().get("bot_name"));
+        ts3Api.setNickname(Session.getSettings().get("bot_name").replace(" ",""));
+        if (ts3Api.isClientOnline(ts3Api.getClientByNameExact("Frosqh",true).getUniqueIdentifier())
+                &&
+                ts3Api.whoAmI().getChannelId()!=ts3Api.getClientByNameExact("Frosqh",true).getChannelId()){
             ts3Api.moveQuery(ts3Api.getClientByNameExact("Frosqh",true).getChannelId());
         }
         final int clientId = ts3Api.whoAmI().getId();
@@ -53,10 +56,30 @@ public class TS3Api {
                         if (args.length<2){
                             rep = "Usage : !help [cmd]";
                         } else {
-                            switch (args[1]){
+                            switch (args[1].toLowerCase()){
                                 case "paikea":
                                     rep = "Usage : !paikea \n";
                                     rep += "Affiche une chanson traditionnelle maori";
+                                    break;
+                                case "next":
+                                    rep = "Usage : !next \n";
+                                    rep += "Stoppe la lecture courante, change la chanson courante vers la prochaine dans la queue et lance la lecture";
+                                    break;
+                                case "play":
+                                    rep = "Usage : !play \n";
+                                    rep += "Reprend une lecture en pause, ne lance pas une musique si aucune n'est en cours";
+                                    break;
+                                case "!pause":
+                                    rep = "Usage : !pause \n";
+                                    rep += "Interrompt une lecture en cours";
+                                    break;
+                                case "prev":
+                                    rep = "Usage : !prev \n";
+                                    rep += "Stoppe la lecture courante, change la chansonc ourante vers la dernière jouée, et lance la lecture";
+                                    break;
+                                case "setvolume":
+                                    rep = "Usage : !setVolume vol \n";
+                                    rep += "Change le volume du player vers la valeur vol";
                                     break;
                             }
                         }
@@ -71,6 +94,9 @@ public class TS3Api {
                             rep+="      • !next : Lit la prochaine musique de la liste d'attente \n";
                             rep+="      • !play : Sort le player de l'état 'Pause' \n";
                             rep+="      • !pause : Met le player en état 'Pause' \n";
+                            rep+="      • !prev : Revient à la dernière musique jouée \n";
+                            rep+="      • !setVolume : Change le volume du player \n";
+
 
                             rep+="N'hésitez pas à taper !help [cmd] pour obtenir de l'aide spécifique à une commande.";
                             break;
@@ -100,6 +126,10 @@ public class TS3Api {
                             else
                                 rep="Ça joue déjà, réfléchis un peu ><";
                             break;
+                        case "toggleautoplay":
+                            Session.getPlayer().toggleAutoPlay();
+
+                            break;
                         case "merde":
                             rep="Diantre*";
                             break;
@@ -125,6 +155,11 @@ public class TS3Api {
                             rep="Plop à toi, mon frère !";
                             break;
                         default:
+                            if (e.getMessage().toLowerCase().startsWith("!setvolume")){
+                                System.out.println(Double.parseDouble(e.getMessage().split(" ")[1]));
+                                Session.getPlayer().setVolume(Double.parseDouble(e.getMessage().split(" ")[1]));
+                                break;
+                            }
                             rep="Je ne connais pas cette commande, je te la renvoie donc ! (>'.')> ~= "+e.getMessage();
                             break;
                     }

@@ -25,7 +25,7 @@ public class BotPaikea extends Application{
     public static void main(String[] args) throws IOException, InterruptedException {
         log.debug("Executing main() method");
         InetAddress serveur = InetAddress.getByName("localhost");
-        Socket socket = new Socket(serveur,2302);
+        Socket socket = new Socket(serveur,3857);
         socket.setSoTimeout(0);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintStream out = new PrintStream(socket.getOutputStream());

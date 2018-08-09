@@ -65,6 +65,12 @@ public class Server extends Thread {
                         Session.getPlayer().play();
                     update();
                 }
+                if (receivedData.startsWith(",[..,]")){
+                    SongDAO songDAO = new SongDAO();
+                    Session.getPlayer().add(songDAO.find(Integer.parseInt(receivedData.split(" ")[1])));
+                    if (!Session.getPlayer().isPlaying())
+                        Session.getPlayer().next();
+                }
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
