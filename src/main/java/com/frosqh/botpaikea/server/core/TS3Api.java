@@ -6,10 +6,11 @@ import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
 import com.github.theholywaffle.teamspeak3.api.event.TS3EventAdapter;
 import com.github.theholywaffle.teamspeak3.api.event.TS3EventType;
 import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
+import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 
 public class TS3Api {
     private com.github.theholywaffle.teamspeak3.TS3Api ts3Api;
-    private final String[] users = {"frosqh"/*,"Rheoklash","Izatof","Harinman"*/};
+    private final String[] users = {"frosqh","Rheoklash","Izatof","Harinman"};
     private final String paikeaSong = "\n" +
             "Uia mai koia, whakahuatia ake; \n" +
             "Ko wai te whare nei e?\n" +
@@ -34,11 +35,11 @@ public class TS3Api {
         TS3Query ts3Query = new TS3Query(ts3Config);
         ts3Query.connect();
         ts3Api = ts3Query.getApi();
-        ts3Api.login("BotPaikea","QKtuQmzq");
+        ts3Api.login("BotPaikea","d9DmuZnq");
         ts3Api.selectVirtualServerById(1);
         System.out.println(Session.getSettings().get("bot_name"));
         ts3Api.setNickname(Session.getSettings().get("bot_name").replace(" ",""));
-        if (ts3Api.isClientOnline(ts3Api.getClientByNameExact("Frosqh",true).getUniqueIdentifier())
+        if (ts3Api.isClientOnline(ts3Api.getClientByNameExact("Frosqh",true).getUniqueIdentifier())  //TODO Remplacer par un test pignouf != null
                 &&
                 ts3Api.whoAmI().getChannelId()!=ts3Api.getClientByNameExact("Frosqh",true).getChannelId()){
             ts3Api.moveQuery(ts3Api.getClientByNameExact("Frosqh",true).getChannelId());
@@ -169,8 +170,11 @@ public class TS3Api {
             }
 
         });
-        for (String user : users){
-            ts3Api.sendPrivateMessage(ts3Api.getClientByNameExact(user,true).getId(),"Plop, je suis en ligne ! Tente !help pour avoir la liste des commandes disponibles.");
+        for (String user : users) {
+            Client pignouf = ts3Api.getClientByNameExact(user, true);
+            if (pignouf != null){
+                ts3Api.sendPrivateMessage(pignouf.getId(), "Plop, je suis en ligne ! Tente !help pour avoir la liste des commandes disponibles.");
+            }
         }
     }
 
