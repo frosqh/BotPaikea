@@ -22,7 +22,7 @@ repositories {
     mavenCentral()
 }
 
-buildScan { licenseAgreementUrl = 'https://gradle.com/terms-of-service'; licenseAgree = 'yes' }
+//buildScan { licenseAgreementUrl = "https://gradle.com/terms-of-service"; licenseAgree = 'yes' }
 
 dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.10.0'

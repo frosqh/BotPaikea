@@ -33,4 +33,7 @@ public class UtilsUnitTest {
     public void isIntegerNegativeDoubleTest(){
         Assert.assertFalse(Utils.isInteger("-5.3"));
     }
+
+     @Test
+    public void isTrueFalse() { Assert.assertTrue(false);};
 }
