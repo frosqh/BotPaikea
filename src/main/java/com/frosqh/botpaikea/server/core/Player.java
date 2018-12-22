@@ -17,6 +17,7 @@ public class Player {
     private final List<Song> history;
     private List<Song> queue;
     private double vol = 50;
+    private boolean autoPlay = true;
 
     public boolean isPlaying() {
         return isPlaying;
@@ -65,7 +66,7 @@ public class Player {
         isPlaying=true;
     }
 
-    public void prev(){
+    public boolean prev(){
         if (!history.isEmpty()){
             if (mediaPlayer!=null)
                 mediaPlayer.stop();
@@ -81,7 +82,9 @@ public class Player {
             initPlayer();
             mediaPlayer.play();
             isPlaying=true;
+            return true;
         }
+        return false;
     }
 
     public double getDuration(){
@@ -125,7 +128,8 @@ public class Player {
 
     private void initPlayer(){
         mediaPlayer.setVolume(vol);
-        mediaPlayer.setOnEndOfMedia(this::next);
+        if (autoPlay) mediaPlayer.setOnEndOfMedia(this::next);
+        else mediaPlayer.setOnEndOfMedia(null);
     }
 
     public void add(Song newSong){
@@ -133,10 +137,39 @@ public class Player {
     }
 
     public void toggleAutoPlay() {
-        if (mediaPlayer.getOnEndOfMedia()==null){
+        if (!autoPlay){
             mediaPlayer.setOnEndOfMedia(this::next);
         } else {
             mediaPlayer.setOnEndOfMedia(null);
         }
+        autoPlay=!autoPlay;
+    }
+
+    public boolean isAutoPlayActive(){
+        return autoPlay;
+    }
+
+    public String getInfos(){
+        if (!isPlaying()) return Session.locale.NOTHING_PLAYING();
+        Song songPl = getPlaying();
+        int t = (int) getTimeCode()/1000;
+        int v = (int) getVolume();
+        int d = (int) getDuration()/1000;
+        String current ="";
+        int mC = t/60;
+        int sC = t%60;
+        if (mC>0){
+            current=String.valueOf(mC)+"m";
+        }
+        current+=String.valueOf(sC)+"s";
+        String total = "";
+        int mD = d/60;
+        int sD = d%60;
+        if (mD>0){
+            total=String.valueOf(mD)+"m";
+        }
+        total+=String.valueOf(sD)+"s";
+
+        return Session.locale.NOW_PLAYING(songPl.getTitle(), songPl.getArtist()) + "("+current+"/"+total+")"+"\nPlayer Volume : "+v;
     }
 }

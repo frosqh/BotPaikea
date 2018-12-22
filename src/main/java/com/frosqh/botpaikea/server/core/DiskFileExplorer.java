@@ -67,9 +67,16 @@ public class DiskFileExplorer {
         LocalDateTime now = LocalDateTime.now();
         if (paths.size()>0){
             for (String p : paths){
-                Song temp = new Song(-1,p.substring(p.indexOf("_-_")+3).replace("_"," "),p.substring(0,p.indexOf("_-_")).replace("_"," "),initialPath+"\\"+p,null);
+                if (p.contains("_-_")) {
+                    String s = p.substring(p.indexOf("_-_") + 3).replace("_", " ");
+                    String t = p.substring(0, p.indexOf("_-_")).replace("_", " ");
+                    Song temp = new Song(-1, s, t, initialPath + "\\" + p, null);
+                    songDAO.create(temp);
+                } else {
+                    Song temp = new Song(-1,p,"unknown",initialPath+"\\"+p,null);
+                    songDAO.create(temp);
+                }
                 //TODO Afficher une fenêtre
-                songDAO.create(temp);
             }
         }
         LocalDateTime then = LocalDateTime.now();

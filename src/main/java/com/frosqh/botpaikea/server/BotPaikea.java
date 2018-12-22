@@ -4,7 +4,7 @@ import com.frosqh.botpaikea.server.core.DataBase.DataBase;
 import com.frosqh.botpaikea.server.core.Player;
 import com.frosqh.botpaikea.server.core.Server;
 import com.frosqh.botpaikea.server.core.Session;
-import com.frosqh.botpaikea.server.core.TS3Api;
+import com.frosqh.botpaikea.server.core.ts3api.TS3Api;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +25,7 @@ public class BotPaikea extends Application{
         Session.setStage(primaryStage);
         primaryStage.setTitle("BotPaikea");
         primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        //primaryStage.show();
     }
 
 

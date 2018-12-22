@@ -67,6 +67,15 @@ public class DataBase {
                     + "game_id TEXT NOT NULL,\n"
                     + "tags TEXT\n);";
 
+            String tableTag = "CREATE TABLE IF NOT EXISTS tag (\n"
+                    + "id INTEGER PRIMARY KEY, \n"
+                    + "title TEXT NOT NULL\n);";
+
+            String tableTagBySong = "CREATE TABLE IF NOT EXISTS tagbysong (\n"
+                    + "id INTEGER PIRMARY KEY, \n"
+                    + "tag_id INTEGER NOT NULL,\n"
+                    + "song_id INTEGER NOT NULL\n);";
+
             Statement stm = null;
             try {
                 stm = connect.createStatement();
@@ -108,6 +117,20 @@ public class DataBase {
             } catch (SQLException e) {
                 db.delete();
                 Session.throwError(log,4,true,"","Game");
+            }
+            log.debug("Creating tag table !");
+            try {
+                stm.execute(tableTag);
+            } catch (SQLException e) {
+                db.delete();
+                Session.throwError(log,4,true,"","Tag");
+            }
+            log.debug("Creating tagbysong table !");
+            try {
+                stm.execute(tableTagBySong);
+            } catch (SQLException e) {
+                db.delete();
+                Session.throwError(log,4,true,"","TagBySong");
             }
             log.debug("DataBase created");
         }

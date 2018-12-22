@@ -2,6 +2,9 @@ package com.frosqh.botpaikea.server.core;
 
 import com.frosqh.botpaikea.server.BotPaikea;
 import com.frosqh.botpaikea.server.core.DataBase.ConnectionSQLite;
+import com.frosqh.botpaikea.server.core.strings.Strings;
+import com.frosqh.botpaikea.server.core.strings.fr_fr;
+import com.frosqh.botpaikea.server.core.ts3api.TS3Api;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +19,7 @@ import java.util.Set;
 public class Session {
 
     public static boolean debug = false;
+    public static Strings locale;
     private static boolean init;
     private static Stage stage;
     private static HashMap<String,String> settings;
@@ -25,17 +29,20 @@ public class Session {
     private static Player player;
     private static TS3Api ts3Api;
     private final static Logger log = LogManager.getLogger(Session.class);
-    private final static String[] keywords={"database","dirs","port"};
+    private final static String[] keywords={"database","dirs","port","sv_address","sv_login","sv_password"};
     private final static String[] intExp = {"port"};
     private static final HashMap<String,Thread> clients = new HashMap<>();
+
 
     private static final String properties =
             "#Bot Paikea Server Properties\n" +
             "database=BotPaikea.db\n" +
-            "dirs=C:\\Users\\Admin\\Music\n "+
+            "dirs=C:\\Users\\Admin\\Music\n"+
             "port=2302\n"+
-            "bot_name=Bot Paikea"+
-            "";
+            "bot_name=Bot Paikea\n"+
+            "sv_address=127.0.0.1\n"+
+            "sv_login=login_quer\n"+
+            "sv_password=password_query";
 
     public static boolean isInit() {
         return init;
@@ -75,7 +82,12 @@ public class Session {
                     String value = prop[1];
                     if (Arrays.asList(intExp).contains(key) && !Utils.isInteger(value))
                         throwError(log,12,true,"Integer expected",key);
-                    settings.put(key,value);
+                    if (key.equals("locale")){
+                        switch(value){
+                            case "fr_fr":
+                                locale = new fr_fr();
+                        }
+                    } else settings.put(key,value);
                 }
             }
             bufRead.close();
@@ -221,5 +233,9 @@ public class Session {
 
     public static void addClient(InetAddress inetAddress, Server thread) {
         clients.put(inetAddress.toString(),thread);
+    }
+
+    public static String getFromSettings(String str){
+        return settings.get(str);
     }
 }
